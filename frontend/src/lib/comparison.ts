@@ -72,12 +72,18 @@ export function compareScenarios(
  * Otherwise anchors the table around the current extra amount
  * (50%, 100%, 150%, 200% of `currentExtra`, plus the 0 baseline).
  */
-export function getExtraAmounts(currentExtra: number, emi: number): number[] {
+export function getExtraAmounts(
+  currentExtra: number,
+  emi: number,
+  customAmounts: number[] = [],
+): number[] {
+  let amounts: number[]
   if (currentExtra <= 0) {
-    const amounts = [0, Math.round(emi * 0.1), Math.round(emi * 0.25), Math.round(emi * 0.5), emi]
-    return [...new Set(amounts)].filter(a => a >= 0).sort((a, b) => a - b)
+    amounts = [0, Math.round(emi * 0.1), Math.round(emi * 0.25), Math.round(emi * 0.5), emi]
+  } else {
+    amounts = [0, Math.round(currentExtra * 0.5), currentExtra, Math.round(currentExtra * 1.5), currentExtra * 2]
   }
-  const amounts = [0, Math.round(currentExtra * 0.5), currentExtra, Math.round(currentExtra * 1.5), currentExtra * 2]
+  amounts.push(...customAmounts)
   return [...new Set(amounts)].filter(a => a >= 0).sort((a, b) => a - b)
 }
 
