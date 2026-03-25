@@ -1,0 +1,18 @@
+{
+  "name": "Reddy Loan Helper",
+  "short_name": "LoanHelper",
+  "description": "Student loan payoff estimator with EMI calculations and amortization charts",
+  "start_url": "/Reddy_Loan_Helper/",
+  "scope": "/Reddy_Loan_Helper/",
+  "display": "standalone",
+  "background_color": "#fafaf9",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
