@@ -1,6 +1,7 @@
 import { FileSearch } from 'lucide-react'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
+import { LoginPage } from './components/LoginPage'
 import { LoanInputForm } from './components/form/LoanInputForm'
 import { SummaryCards } from './components/results/SummaryCards'
 import { PayoffTimeline } from './components/results/PayoffTimeline'
@@ -11,9 +12,23 @@ import { AmortizationTable } from './components/tables/AmortizationTable'
 import { ExportButtons } from './components/ExportButtons'
 import { ProgressBar } from './components/ui/ProgressBar'
 import { useLoanCalculator } from './hooks/useLoanCalculator'
+import { useAuth } from './hooks/useAuth'
 
 function App(): React.JSX.Element {
+  const { user, isLoading } = useAuth()
   const { inputs, errors, results, updateInput, loadPreset } = useLoanCalculator()
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-900 flex items-center justify-center">
+        <div className="animate-pulse text-stone-400 dark:text-stone-500">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LoginPage />
+  }
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900">

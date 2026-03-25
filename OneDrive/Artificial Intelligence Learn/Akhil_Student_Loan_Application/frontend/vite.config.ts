@@ -4,7 +4,12 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/Reddy_Loan_Helper/',
+  base: '/',
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8000',
+    },
+  },
   build: {
     rollupOptions: {
       output: {
