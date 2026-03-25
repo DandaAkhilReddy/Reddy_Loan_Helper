@@ -78,7 +78,7 @@ async def update_loan(
     return LoanCalculationResponse.model_validate(loan)
 
 
-@router.delete("/{loan_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{loan_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_loan(
     loan_id: uuid.UUID,
     user: User = Depends(get_current_user),
