@@ -43,20 +43,26 @@ function App(): React.JSX.Element {
             <ProgressBar originalMonths={results.comparison.originalMonths} newMonths={results.comparison.newMonths} />
             <SummaryCards comparison={results.comparison} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <BalanceChart
-                originalSchedule={results.originalSchedule}
-                acceleratedSchedule={results.acceleratedSchedule}
-              />
-              <InterestBreakdownChart
-                originalSchedule={results.originalSchedule}
-                acceleratedSchedule={results.acceleratedSchedule}
-              />
+              <div className="animate-slide-in-left" style={{ animationDelay: '0.1s' }}>
+                <BalanceChart
+                  originalSchedule={results.originalSchedule}
+                  acceleratedSchedule={results.acceleratedSchedule}
+                />
+              </div>
+              <div className="animate-slide-in-left" style={{ animationDelay: '0.25s' }}>
+                <InterestBreakdownChart
+                  originalSchedule={results.originalSchedule}
+                  acceleratedSchedule={results.acceleratedSchedule}
+                />
+              </div>
             </div>
+            <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <AmortizationTable
               originalSchedule={results.originalSchedule}
               acceleratedSchedule={results.acceleratedSchedule}
               effectiveEmi={results.effectiveEmi}
             />
+            </div>
             <ExportButtons schedule={results.acceleratedSchedule} effectiveEmi={results.effectiveEmi} />
             <ComparisonTable
               principal={inputs.principal}

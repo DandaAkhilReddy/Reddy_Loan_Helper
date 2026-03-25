@@ -42,11 +42,11 @@ export function LoginPage(): React.JSX.Element {
             Reddy Loan Helper
           </h1>
           <p className="text-stone-500 dark:text-stone-400 mt-1">
-            Student loan payoff estimator
+            Loan payment estimator
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-stone-800 rounded-xl shadow-sm border border-stone-200 dark:border-stone-700 p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-stone-800 rounded-xl shadow-sm border border-stone-200 dark:border-stone-700 p-6 space-y-4 animate-scale-in">
           <div>
             <label htmlFor="login-name" className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
               Enter your name to continue
@@ -56,7 +56,7 @@ export function LoginPage(): React.JSX.Element {
               type="text"
               value={name}
               onChange={(e) => { setName(e.target.value); setError('') }}
-              placeholder="e.g. Akhil"
+              placeholder="e.g. Mom"
               autoFocus
               autoComplete="name"
               maxLength={50}
