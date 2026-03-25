@@ -12,6 +12,7 @@ import {
 import type { AmortizationEntry } from '../../types/loan'
 import { transformToChartData } from '../../lib/chart-transforms'
 import { useCurrency } from '../../hooks/useCurrency'
+import { useDarkMode } from '../../hooks/useDarkMode'
 
 interface BalanceChartProps {
   originalSchedule: AmortizationEntry[]
@@ -27,6 +28,11 @@ export function BalanceChart({
   acceleratedSchedule,
 }: BalanceChartProps): React.JSX.Element {
   const { formatCompact } = useCurrency()
+  const { isDark } = useDarkMode()
+
+  const originalColor = isDark ? '#818cf8' : '#6366f1'
+  const acceleratedColor = isDark ? '#34d399' : '#10b981'
+  const tickColor = isDark ? '#a8a29e' : '#44403c'
 
   const data = useMemo(
     () => transformToChartData(originalSchedule, acceleratedSchedule),
@@ -36,28 +42,28 @@ export function BalanceChart({
   const payoffMonth = acceleratedSchedule.length
 
   if (data.length === 0) {
-    return <div className="text-stone-400 text-center py-8">No data to display</div>
+    return <div className="text-stone-400 dark:text-stone-500 text-center py-8">No data to display</div>
   }
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 p-4">
-      <h3 className="text-sm font-semibold text-stone-700 mb-4">Balance Over Time</h3>
+    <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-200 mb-4">Balance Over Time</h3>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradOriginal" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6366f1" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+              <stop offset="0%" stopColor={originalColor} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={originalColor} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="gradAccelerated" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+              <stop offset="0%" stopColor={acceleratedColor} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={acceleratedColor} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+          <XAxis dataKey="label" tick={{ fontSize: 11, fill: tickColor }} />
           <YAxis
             tickFormatter={(v: number) => formatCompact(v)}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: tickColor }}
             width={60}
           />
           <Tooltip formatter={(value) => formatCompact(Number(value))} />
@@ -74,7 +80,7 @@ export function BalanceChart({
             type="monotone"
             dataKey="balanceOriginal"
             name="Without Extra"
-            stroke="#6366f1"
+            stroke={originalColor}
             fill="url(#gradOriginal)"
             strokeWidth={2}
           />
@@ -82,7 +88,7 @@ export function BalanceChart({
             type="monotone"
             dataKey="balanceAccelerated"
             name="With Extra"
-            stroke="#10b981"
+            stroke={acceleratedColor}
             fill="url(#gradAccelerated)"
             strokeWidth={2}
           />

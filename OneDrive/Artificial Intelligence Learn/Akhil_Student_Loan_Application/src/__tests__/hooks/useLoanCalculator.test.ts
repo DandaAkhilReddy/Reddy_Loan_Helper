@@ -7,6 +7,14 @@ import { LOAN_DEFAULTS } from '../../constants/defaults'
 // ---------------------------------------------------------------------------
 
 describe('useLoanCalculator', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
+  afterEach(() => {
+    localStorage.clear()
+  })
+
   it('initial state matches LOAN_DEFAULTS', () => {
     const { result } = renderHook(() => useLoanCalculator())
     expect(result.current.inputs).toEqual(LOAN_DEFAULTS)
@@ -177,6 +185,83 @@ describe('useLoanCalculator', () => {
     // No validation error for tenureMonths (validator only checks principal and annualRate)
     expect(result.current.errors).not.toHaveProperty('tenureMonths')
     expect(result.current.results).toBeNull()
+  })
+
+  // ── localStorage persistence ──────────────────────────────────────────────
+
+  it('loads from localStorage on init when valid JSON is stored', () => {
+    const stored = { principal: 500000, annualRate: 9, emi: 10000, tenureMonths: 60, extraMonthly: 500 }
+    localStorage.setItem('reddy-loan-inputs', JSON.stringify(stored))
+    const { result } = renderHook(() => useLoanCalculator())
+    expect(result.current.inputs.principal).toBe(500000)
+    expect(result.current.inputs.annualRate).toBe(9)
+    expect(result.current.inputs.emi).toBe(10000)
+    expect(result.current.inputs.tenureMonths).toBe(60)
+    expect(result.current.inputs.extraMonthly).toBe(500)
+  })
+
+  it('persists inputs to localStorage when a field is updated', () => {
+    localStorage.removeItem('reddy-loan-inputs')
+    const { result } = renderHook(() => useLoanCalculator())
+    act(() => {
+      result.current.updateInput('principal', 999999)
+    })
+    const stored = JSON.parse(localStorage.getItem('reddy-loan-inputs') ?? '{}') as { principal: number }
+    expect(stored.principal).toBe(999999)
+  })
+
+  it('reset removes localStorage entry', () => {
+    localStorage.setItem('reddy-loan-inputs', JSON.stringify({ principal: 100000 }))
+    const { result } = renderHook(() => useLoanCalculator())
+    act(() => {
+      result.current.reset()
+    })
+    expect(localStorage.getItem('reddy-loan-inputs')).toBeNull()
+  })
+
+  it('falls back to LOAN_DEFAULTS when localStorage contains corrupt JSON', () => {
+    localStorage.setItem('reddy-loan-inputs', 'not-valid-json{{{')
+    const { result } = renderHook(() => useLoanCalculator())
+    expect(result.current.inputs).toEqual(LOAN_DEFAULTS)
+  })
+
+  it('merges partial stored data with LOAN_DEFAULTS for missing fields', () => {
+    localStorage.setItem('reddy-loan-inputs', JSON.stringify({ principal: 750000 }))
+    const { result } = renderHook(() => useLoanCalculator())
+    expect(result.current.inputs.principal).toBe(750000)
+    expect(result.current.inputs.annualRate).toBe(LOAN_DEFAULTS.annualRate)
+    expect(result.current.inputs.emi).toBe(LOAN_DEFAULTS.emi)
+    expect(result.current.inputs.tenureMonths).toBe(LOAN_DEFAULTS.tenureMonths)
+    expect(result.current.inputs.extraMonthly).toBe(LOAN_DEFAULTS.extraMonthly)
+  })
+
+  it('falls back to LOAN_DEFAULTS when stored principal is 0 or negative', () => {
+    localStorage.setItem('reddy-loan-inputs', JSON.stringify({ principal: -500, annualRate: 10, emi: null, tenureMonths: 60, extraMonthly: 0 }))
+    const { result } = renderHook(() => useLoanCalculator())
+    expect(result.current.inputs.principal).toBe(LOAN_DEFAULTS.principal)
+  })
+
+  // ── LOAD_PRESET ──────────────────────────────────────────────────────────
+
+  it('loadPreset sets inputs and re-validates', () => {
+    const { result } = renderHook(() => useLoanCalculator())
+    const presetInputs = { principal: 1000000, annualRate: 8.5, emi: null, tenureMonths: 84, extraMonthly: 0 }
+    act(() => {
+      result.current.loadPreset(presetInputs)
+    })
+    expect(result.current.inputs.principal).toBe(1000000)
+    expect(result.current.inputs.annualRate).toBe(8.5)
+    expect(result.current.inputs.tenureMonths).toBe(84)
+    expect(result.current.errors).toEqual({})
+  })
+
+  it('loadPreset with invalid principal sets validation error', () => {
+    const { result } = renderHook(() => useLoanCalculator())
+    const badPreset = { principal: 0, annualRate: 0, emi: null, tenureMonths: null, extraMonthly: 0 }
+    act(() => {
+      result.current.loadPreset(badPreset)
+    })
+    expect(result.current.errors).toHaveProperty('principal')
   })
 })
 

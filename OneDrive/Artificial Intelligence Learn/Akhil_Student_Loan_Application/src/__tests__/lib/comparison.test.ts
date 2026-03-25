@@ -1,4 +1,4 @@
-import { compareScenarios } from '../../lib/comparison'
+import { compareScenarios, compareMultipleScenarios } from '../../lib/comparison'
 import * as amortization from '../../lib/amortization'
 
 // Standard loan used across multiple tests:
@@ -101,5 +101,80 @@ describe('compareScenarios', () => {
     const result = compareScenarios(PRINCIPAL, RATE, EMI, 0)
     expect(result.newTotalInterest).toBe(0)
     spy.mockRestore()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// compareMultipleScenarios
+// ---------------------------------------------------------------------------
+
+describe('compareMultipleScenarios', () => {
+  it('returns an array of ScenarioComparison objects', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0, 2000, 5000])
+    expect(results).toHaveLength(3)
+    expect(results[0]).toMatchObject({ extraAmount: 0 })
+    expect(results[1]).toMatchObject({ extraAmount: 2000 })
+    expect(results[2]).toMatchObject({ extraAmount: 5000 })
+  })
+
+  it('zero extra row has interestSaved=0 and monthsSaved=0', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0, 3000])
+    const baseline = results.find(r => r.extraAmount === 0)
+    expect(baseline).toBeDefined()
+    expect(baseline?.interestSaved).toBe(0)
+    expect(baseline?.monthsSaved).toBe(0)
+  })
+
+  it('zero extra row payoffMonths matches baseline originalMonths', () => {
+    const baseline = compareScenarios(PRINCIPAL, RATE, EMI, 0)
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0])
+    expect(results[0]?.payoffMonths).toBe(baseline.originalMonths)
+  })
+
+  it('zero extra row totalPaid equals principal plus baseline totalInterest', () => {
+    const baseline = compareScenarios(PRINCIPAL, RATE, EMI, 0)
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0])
+    expect(results[0]?.totalPaid).toBe(PRINCIPAL + baseline.originalTotalInterest)
+  })
+
+  it('more extra payment produces more savings', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0, 2000, 8000])
+    const small = results.find(r => r.extraAmount === 2000)!
+    const large = results.find(r => r.extraAmount === 8000)!
+    expect(large.interestSaved).toBeGreaterThan(small.interestSaved)
+    expect(large.monthsSaved).toBeGreaterThan(small.monthsSaved)
+  })
+
+  it('returns empty array when principal <= 0', () => {
+    const results = compareMultipleScenarios(0, RATE, EMI, [0, 5000])
+    expect(results).toHaveLength(0)
+  })
+
+  it('returns empty array when emi <= 0', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, 0, [0, 5000])
+    expect(results).toHaveLength(0)
+  })
+
+  it('negative extra amounts are filtered out', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [-1000, 0, 2000])
+    expect(results.some(r => r.extraAmount < 0)).toBe(false)
+    expect(results).toHaveLength(2)
+  })
+
+  it('duplicate amounts in input produce deduplicated output when passed as unique', () => {
+    // compareMultipleScenarios does not deduplicate — caller is responsible.
+    // But getExtraAmounts (tested separately) does. Here we verify that passing
+    // a pre-deduplicated array with no duplicates produces the correct length.
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [0, 3000, 6000])
+    expect(results).toHaveLength(3)
+    const amounts = results.map(r => r.extraAmount)
+    expect(new Set(amounts).size).toBe(amounts.length)
+  })
+
+  it('totalPaid for non-zero extra equals principal plus newTotalInterest', () => {
+    const results = compareMultipleScenarios(PRINCIPAL, RATE, EMI, [5000])
+    const row = results[0]!
+    const scenario = compareScenarios(PRINCIPAL, RATE, EMI, 5000)
+    expect(row.totalPaid).toBe(PRINCIPAL + scenario.newTotalInterest)
   })
 })

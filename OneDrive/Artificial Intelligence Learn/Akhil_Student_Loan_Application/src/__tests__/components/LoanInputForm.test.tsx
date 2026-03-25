@@ -18,6 +18,7 @@ function renderWithProvider(
     inputs: defaultInputs,
     errors: {},
     onUpdate: () => {},
+    onLoadPreset: () => {},
   }
   return render(
     <CurrencyProvider>
