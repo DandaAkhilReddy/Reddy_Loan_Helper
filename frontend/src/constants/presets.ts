@@ -11,7 +11,7 @@ export interface LoanPreset {
 export const LOAN_PRESETS: readonly LoanPreset[] = [
   {
     id: 'akhil-student',
-    label: "Akhil's Student Loan",
+    label: 'Indian Student Loan',
     description: '₹25.6L at 13.5% — 111 months',
     currency: 'INR',
     inputs: { principal: 2563163, annualRate: 13.5, emi: 51476, tenureMonths: 111, extraMonthly: 0 },

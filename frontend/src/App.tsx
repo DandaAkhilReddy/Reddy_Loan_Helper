@@ -1,6 +1,8 @@
-import { FileSearch } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { FileSearch, Loader2 } from 'lucide-react'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
+import { LoginPage } from './components/LoginPage'
 import { LoanInputForm } from './components/form/LoanInputForm'
 import { SummaryCards } from './components/results/SummaryCards'
 import { PayoffTimeline } from './components/results/PayoffTimeline'
@@ -11,9 +13,67 @@ import { AmortizationTable } from './components/tables/AmortizationTable'
 import { ExportButtons } from './components/ExportButtons'
 import { ProgressBar } from './components/ui/ProgressBar'
 import { useLoanCalculator } from './hooks/useLoanCalculator'
+import { useAuth } from './hooks/useAuth'
+import { apiGetLoanData, apiPutLoanData } from './lib/api'
+import type { ServerLoanData } from './lib/api'
 
 function App(): React.JSX.Element {
+  const { user, isLoading } = useAuth()
   const { inputs, errors, results, updateInput, loadPreset } = useLoanCalculator()
+  const syncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const prevUserRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!user) {
+      prevUserRef.current = null
+      return
+    }
+    if (prevUserRef.current === user.id) return
+    prevUserRef.current = user.id
+
+    void apiGetLoanData().then((data) => {
+      if (!data) return
+      loadPreset({
+        principal: data.principal,
+        annualRate: data.annual_rate,
+        emi: data.emi,
+        tenureMonths: data.tenure_months,
+        extraMonthly: data.extra_monthly,
+      })
+    }).catch(() => {})
+  }, [user, loadPreset])
+
+  useEffect(() => {
+    if (!user) return
+    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current)
+    syncTimeoutRef.current = setTimeout(() => {
+      const payload: ServerLoanData = {
+        principal: inputs.principal,
+        annual_rate: inputs.annualRate,
+        emi: inputs.emi,
+        tenure_months: inputs.tenureMonths,
+        extra_monthly: inputs.extraMonthly,
+        currency: 'INR',
+      }
+      void apiPutLoanData(payload).catch(() => {})
+    }, 500)
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      clearTimeout(syncTimeoutRef.current as any)
+    }
+  }, [user, inputs])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-900 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" aria-label="Loading" />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LoginPage />
+  }
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900">
