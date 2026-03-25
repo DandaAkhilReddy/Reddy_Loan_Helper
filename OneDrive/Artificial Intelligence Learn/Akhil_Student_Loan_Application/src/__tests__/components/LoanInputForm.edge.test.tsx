@@ -23,6 +23,7 @@ function renderWithProvider(
     inputs: defaultInputs,
     errors: {},
     onUpdate: () => {},
+    onLoadPreset: () => {},
   }
   return render(
     <CurrencyProvider>
@@ -72,9 +73,11 @@ describe('LoanInputForm — onUpdate called for all fields', () => {
 })
 
 describe('LoanInputForm — does not show errors when none provided', () => {
-  it('no error paragraphs rendered when errors = {}', () => {
-    renderWithProvider()
-    expect(screen.queryByRole('paragraph')).not.toBeInTheDocument()
+  it('no error paragraph ids rendered when errors = {}', () => {
+    const { container } = renderWithProvider()
+    // Error paragraphs carry an id prefixed with "error-"; helper text paragraphs do not
+    expect(container.querySelector('#error-principal')).not.toBeInTheDocument()
+    expect(container.querySelector('#error-rate')).not.toBeInTheDocument()
   })
 })
 

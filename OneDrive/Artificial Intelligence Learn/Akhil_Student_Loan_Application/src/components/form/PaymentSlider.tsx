@@ -10,7 +10,7 @@ export function PaymentSlider({ value, onChange }: PaymentSliderProps): React.JS
 
   return (
     <div>
-      <label htmlFor="extra-payment" className="block text-sm font-medium text-stone-700 mb-1">
+      <label htmlFor="extra-payment" className="block text-sm font-medium text-stone-700 dark:text-stone-200 mb-1">
         Extra Monthly Payment
       </label>
       <div className="flex items-center gap-4">
@@ -29,7 +29,7 @@ export function PaymentSlider({ value, onChange }: PaymentSliderProps): React.JS
           aria-valuenow={value}
           aria-valuetext={formatCompact(value)}
         />
-        <span className="text-sm font-medium text-stone-700 tabular-nums min-w-[60px] text-right">
+        <span className="text-sm font-medium text-stone-700 dark:text-stone-200 tabular-nums min-w-[60px] text-right">
           {formatCompact(value)}
         </span>
       </div>

@@ -1,5 +1,5 @@
 /**
- * Covers lines 32 (SET_ERRORS) and 36 (default) of useLoanCalculator.ts.
+ * Covers SET_ERRORS and default branches of useLoanCalculator.ts.
  *
  * Both branches are TypeScript-unreachable via the public API. We reach them
  * at runtime by capturing the internal dispatch through a module-level
@@ -17,10 +17,13 @@ vi.mock('react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react')>()
   return {
     ...actual,
-    useReducer: <S, A>(
+    useReducer: <S, A, I>(
       reducer: (s: S, a: A) => S,
-      initialState: S,
+      initArg: I,
+      init?: (i: I) => S,
     ): [S, (a: A) => void] => {
+      // Support both 2-arg and 3-arg forms
+      const initialState = init ? init(initArg) : (initArg as unknown as S)
       const [state, dispatch] = actual.useReducer(reducer, initialState)
       captureStore.dispatch = dispatch as (action: Record<string, unknown>) => void
       return [state, dispatch]
@@ -32,7 +35,7 @@ vi.mock('react', async (importOriginal) => {
 import { renderHook, act } from '@testing-library/react'
 import { useLoanCalculator } from '../../hooks/useLoanCalculator'
 
-describe('useLoanCalculator reducer — SET_ERRORS branch (line 32)', () => {
+describe('useLoanCalculator reducer — SET_ERRORS branch', () => {
   beforeEach(() => {
     captureStore.dispatch = null
   })
@@ -50,7 +53,7 @@ describe('useLoanCalculator reducer — SET_ERRORS branch (line 32)', () => {
   })
 })
 
-describe('useLoanCalculator reducer — default branch (line 36)', () => {
+describe('useLoanCalculator reducer — default branch', () => {
   beforeEach(() => {
     captureStore.dispatch = null
   })

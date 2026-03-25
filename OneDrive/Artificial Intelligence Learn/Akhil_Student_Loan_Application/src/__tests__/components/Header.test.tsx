@@ -1,12 +1,15 @@
 import { render, screen } from '@testing-library/react'
 import { CurrencyProvider } from '../../hooks/useCurrency'
+import { DarkModeProvider } from '../../hooks/useDarkMode'
 import { Header } from '../../components/Header'
 
 function renderWithProvider(): ReturnType<typeof render> {
   return render(
-    <CurrencyProvider>
-      <Header />
-    </CurrencyProvider>
+    <DarkModeProvider>
+      <CurrencyProvider>
+        <Header />
+      </CurrencyProvider>
+    </DarkModeProvider>
   )
 }
 

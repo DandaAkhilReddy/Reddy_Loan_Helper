@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { createElement } from 'react'
 import type { ReactNode } from 'react'
 import { CurrencyProvider } from '../../hooks/useCurrency'
+import { DarkModeProvider } from '../../hooks/useDarkMode'
 import { InterestBreakdownChart } from '../../components/charts/InterestBreakdownChart'
 import type { AmortizationEntry } from '../../types/loan'
 
@@ -49,7 +50,7 @@ vi.mock('recharts', () => {
 // ---------------------------------------------------------------------------
 
 function wrapper({ children }: { children: ReactNode }): ReactNode {
-  return createElement(CurrencyProvider, null, children)
+  return createElement(DarkModeProvider, null, createElement(CurrencyProvider, null, children))
 }
 
 function renderWithProvider(ui: React.JSX.Element): ReturnType<typeof render> {
@@ -136,5 +137,21 @@ describe('InterestBreakdownChart', () => {
         <InterestBreakdownChart originalSchedule={orig} acceleratedSchedule={accel} />,
       ),
     ).not.toThrow()
+  })
+
+  it('renders correctly in dark mode (covers dark tickColor branch)', () => {
+    localStorage.setItem('reddy-loan-dark-mode', 'true')
+    try {
+      const orig = makeSchedule(6, 6000)
+      const accel = makeSchedule(4, 6000)
+      expect(() =>
+        renderWithProvider(
+          <InterestBreakdownChart originalSchedule={orig} acceleratedSchedule={accel} />,
+        ),
+      ).not.toThrow()
+      expect(screen.getByText('Interest vs Principal Paid')).toBeInTheDocument()
+    } finally {
+      localStorage.removeItem('reddy-loan-dark-mode')
+    }
   })
 })
