@@ -1,0 +1,320 @@
+{
+  "report_date": "2026-02-28",
+  "personal_info": {
+    "name": "Akhil Reddy Danda",
+    "addresses": [
+      "100 Woodrow Wilson Way NW Apt 52, Rome, GA 30165",
+      "1521 S Staples St Ste 606, Corpus Christi, TX 78404",
+      "7350 McArdle Rd Apt 14, Corpus Christi, TX"
+    ]
+  },
+  "scores": {
+    "equifax": {
+      "score": 522,
+      "model": "VantageScore 3.0",
+      "as_of": "2026-02-28"
+    },
+    "transunion": {
+      "score": 489,
+      "model": "VantageScore 3.0",
+      "as_of": "2026-02-28"
+    }
+  },
+  "credit_factors": {
+    "payment_history": {
+      "value": "92%",
+      "rating": "needs_work",
+      "impact": "high"
+    },
+    "credit_card_use": {
+      "value": "104%",
+      "rating": "needs_work",
+      "impact": "high"
+    },
+    "derogatory_marks": {
+      "value": 1,
+      "rating": "fair",
+      "impact": "high"
+    },
+    "credit_age": {
+      "value": "3 years 2 months",
+      "rating": "needs_work",
+      "impact": "medium"
+    },
+    "total_accounts": {
+      "value": 9,
+      "rating": "needs_work",
+      "impact": "low"
+    },
+    "hard_inquiries": {
+      "value": 6,
+      "rating": "needs_work",
+      "impact": "low"
+    }
+  },
+  "accounts": {
+    "credit_cards": {
+      "open": [
+        {
+          "name": "Credit One Bank",
+          "balance": 8,
+          "credit_limit": 300,
+          "utilization_pct": 3,
+          "monthly_payment": 8,
+          "opened": "2022-06-15",
+          "age": "3 years 8 months",
+          "on_time_pct": 100,
+          "times_late_30_60_90": [0, 0, 0],
+          "payment_status": "current",
+          "account_status": "open",
+          "reported": "2026-02-26",
+          "last_payment": "2026-02-01"
+        },
+        {
+          "name": "Bank of America",
+          "balance": 1451,
+          "credit_limit": 1000,
+          "utilization_pct": 145,
+          "monthly_payment": 43,
+          "opened": "2020-02-07",
+          "age": "6 years",
+          "on_time_pct": 100,
+          "times_late_30_60_90": [0, 0, 0],
+          "payment_status": "current",
+          "account_status": "open",
+          "reported": "2026-02-15",
+          "last_payment": "2026-02-01",
+          "notes": "Over credit limit by $451. 145% utilization is severely hurting score."
+        },
+        {
+          "name": "Zolve/Continental Bank",
+          "balance": 4038,
+          "credit_limit": 4000,
+          "utilization_pct": 101,
+          "monthly_payment": 124,
+          "opened": "2023-08-14",
+          "age": "2 years 6 months",
+          "on_time_pct": 90,
+          "times_late_30_60_90": [3, 0, 0],
+          "payment_status": "current",
+          "account_status": "open",
+          "reported": "2026-01-15",
+          "last_payment": "2026-01-01",
+          "remarks": "Variable/adjustable rate",
+          "notes": "Over credit limit. 3 late payments in 2024-2025 (Jan 2024, Jun 2024, Jun 2025)."
+        }
+      ],
+      "closed": [
+        {
+          "name": "American Express",
+          "balance": 0,
+          "credit_limit": 1000,
+          "utilization_pct": 0,
+          "on_time_pct": 81,
+          "times_late_30_60_90": [2, 1, 1],
+          "payment_status": "current",
+          "account_status": "closed",
+          "closed_date": "2021-08-01",
+          "opened": "2020-08-19",
+          "remarks": "Account closed by credit grantor",
+          "notes": "Multiple late payments before closure. Negative mark aging off ~2028."
+        }
+      ]
+    },
+    "loans": {
+      "open": [
+        {
+          "name": "OneMain Financial",
+          "type": "secured",
+          "balance": 11244,
+          "highest_balance": 9959,
+          "monthly_payment": 314,
+          "opened": "2025-02-24",
+          "term_months": 57,
+          "on_time_pct": 55,
+          "times_late_30_60_90": [1, 1, 3],
+          "payment_status": "120_plus_days_late",
+          "worst_status": "120_plus_days_late",
+          "account_status": "open",
+          "reported": "2026-01-31",
+          "last_payment": "2025-12-01",
+          "remarks": "150 Days past due",
+          "notes": "CRITICAL: Active delinquency is the #1 score destroyer. Must get current immediately. This is a refinance of the older OneMain loan."
+        },
+        {
+          "name": "Leap Finance Inc",
+          "type": "education",
+          "balance": 33945,
+          "highest_balance": 50500,
+          "monthly_payment": 787,
+          "opened": "2023-02-15",
+          "term_months": 84,
+          "on_time_pct": 93,
+          "times_late_30_60_90": [0, 1, 1],
+          "payment_status": "current",
+          "account_status": "open",
+          "reported": "2026-01-31",
+          "last_payment": "2026-01-01",
+          "remarks": "Fixed rate",
+          "notes": "Student loan in good standing. 67% remaining. Keep current — do not prioritize extra payments."
+        }
+      ],
+      "closed": [
+        {
+          "name": "OneMain Financial (old)",
+          "type": "secured",
+          "balance": 0,
+          "highest_balance": 2932,
+          "term_months": 30,
+          "opened": "2024-11-08",
+          "on_time_pct": 100,
+          "times_late_30_60_90": [0, 0, 0],
+          "payment_status": "current",
+          "account_status": "paid_and_closed",
+          "closed_date": "2025-02-01",
+          "remarks": "Refinanced",
+          "notes": "Clean history. Refinanced into current OneMain loan."
+        },
+        {
+          "name": "Upstart Loan Operations",
+          "type": "unsecured",
+          "balance": 0,
+          "highest_balance": null,
+          "term_months": 36,
+          "opened": "2023-01-31",
+          "on_time_pct": 29,
+          "times_late_30_60_90": [1, 1, 3],
+          "payment_status": "charge_off",
+          "worst_status": "charge_off",
+          "account_status": "transferred",
+          "last_payment": "2023-02-01",
+          "remarks": "Charged off account. Fixed rate.",
+          "notes": "CHARGE-OFF. Transferred. Only 29% on-time. This is a severe negative mark that stays for 7 years (~2030). Cannot be changed — focus on other items."
+        }
+      ]
+    },
+    "utilities": [
+      {
+        "name": "TXU Energy",
+        "type": "utility",
+        "balance": 1284,
+        "opened": "2024-11-26",
+        "payment_status": "charge_off",
+        "worst_status": "charge_off",
+        "account_status": "closed",
+        "last_payment": "2025-08-01",
+        "reported": "2025-12-16",
+        "times_late_30_60_90": [0, 0, 0],
+        "remarks": "Charged off account",
+        "notes": "Utility charge-off for $1,284. Pay in full or negotiate pay-for-delete. Opened Nov 2024, charged off quickly."
+      }
+    ],
+    "collections": [
+      {
+        "name": "NCB Management Services",
+        "balance": 4470,
+        "highest_balance": 4470,
+        "opened": "2023-07-24",
+        "account_status": "open",
+        "original_creditor": "unknown",
+        "remarks": "Collection account",
+        "reported": "2026-02-06",
+        "creditor_address": "1 Allied Dr, Trevose, PA 19053-6945",
+        "creditor_phone": "(215) 244-4200",
+        "notes": "ACTIVE COLLECTION. $4,470 balance. Negotiate pay-for-delete at 40-50% ($1,800-$2,200). Get agreement in writing before paying."
+      }
+    ]
+  },
+  "hard_inquiries": [
+    {"name": "Stellantis Financial", "date": "2024-05-02", "type": "auto_financing"},
+    {"name": "Global Lending Services", "date": "2024-05-02", "type": "auto_financing"},
+    {"name": "Ally Financial", "date": "2024-05-02", "type": "auto_financing"},
+    {"name": "Cap One Via Dealer", "date": "2024-05-02", "type": "auto_financing"},
+    {"name": "Flagship Credit Acce", "date": "2024-05-02", "type": "auto_financing"},
+    {"name": "An Hyundai Corpchris", "date": "2024-04-23", "type": "auto_financing"}
+  ],
+  "public_records": [],
+  "payoff_strategy": {
+    "goal": "Reach 700+ credit score within 12 months",
+    "current_avg_score": 505,
+    "target_score": 700,
+    "gap": 195,
+    "priorities": [
+      {
+        "priority": 1,
+        "action": "Get OneMain Financial current",
+        "timeline": "Month 1-2",
+        "cost": 1800,
+        "estimated_score_impact": "+15 to +25",
+        "reason": "Active 120+ day delinquency is the single biggest score killer. Every month it stays delinquent adds more damage."
+      },
+      {
+        "priority": 2,
+        "action": "Pay Bank of America below 30% utilization",
+        "timeline": "Month 2",
+        "cost": 1151,
+        "target_balance": 300,
+        "estimated_score_impact": "+25 to +35",
+        "reason": "145% utilization on a card is catastrophic. Getting to 30% is the sweet spot."
+      },
+      {
+        "priority": 3,
+        "action": "Pay Zolve/Continental below 30% utilization",
+        "timeline": "Month 3",
+        "cost": 2838,
+        "target_balance": 1200,
+        "estimated_score_impact": "+20 to +30",
+        "reason": "101% utilization. Combined with BofA fix, drops overall utilization from 104% to ~28%."
+      },
+      {
+        "priority": 4,
+        "action": "Negotiate NCB collection pay-for-delete",
+        "timeline": "Month 4-5",
+        "cost": 2000,
+        "negotiation_range": "40-50% of $4,470",
+        "estimated_score_impact": "+30 to +50",
+        "reason": "Open collection is a severe negative. Pay-for-delete removes it entirely. Get agreement in writing first."
+      },
+      {
+        "priority": 5,
+        "action": "Pay TXU Energy charge-off",
+        "timeline": "Month 6",
+        "cost": 1284,
+        "estimated_score_impact": "+10 to +20",
+        "reason": "Small charge-off. Paying shows good faith. Try pay-for-delete first."
+      },
+      {
+        "priority": 6,
+        "action": "Maintain 12 months perfect payment history",
+        "timeline": "Ongoing (Month 1-12)",
+        "cost": 0,
+        "estimated_score_impact": "+30 to +50",
+        "reason": "Time heals. 12 consecutive months of on-time payments on all accounts gradually rebuilds payment history."
+      }
+    ],
+    "automatic_improvements": [
+      {
+        "event": "Hard inquiries fall off",
+        "when": "May 2026 (1 month away)",
+        "estimated_score_impact": "+5 to +10",
+        "notes": "All 6 auto financing inquiries from May 2024 will age off the 2-year window."
+      }
+    ],
+    "total_one_time_cost": 8773,
+    "monthly_fixed_obligations": {
+      "onemain": 314,
+      "leap_finance": 787,
+      "credit_one": 8,
+      "total": 1109
+    },
+    "projected_timeline": [
+      {"month": 0, "action": "Starting point", "projected_score_low": 489, "projected_score_high": 522},
+      {"month": 1, "action": "OneMain current", "projected_score_low": 530, "projected_score_high": 545},
+      {"month": 2, "action": "BofA to 30%", "projected_score_low": 560, "projected_score_high": 575},
+      {"month": 3, "action": "Zolve to 30% + inquiries fall off", "projected_score_low": 595, "projected_score_high": 610},
+      {"month": 5, "action": "NCB collection removed", "projected_score_low": 630, "projected_score_high": 655},
+      {"month": 6, "action": "TXU paid", "projected_score_low": 645, "projected_score_high": 670},
+      {"month": 12, "action": "12mo perfect payments", "projected_score_low": 680, "projected_score_high": 710}
+    ]
+  }
+}
