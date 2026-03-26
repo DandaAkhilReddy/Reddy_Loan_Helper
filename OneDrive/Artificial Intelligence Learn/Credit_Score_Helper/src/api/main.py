@@ -38,18 +38,11 @@ def health_check() -> dict[str, str]:
 # Serve frontend static files — try multiple possible locations
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CANDIDATES = [
-    _PROJECT_ROOT / "frontend" / "dist",                  # from src/api/ → src/frontend/dist
-    _PROJECT_ROOT.parent / "src" / "frontend" / "dist",   # from project root
-    Path("/app/src/frontend/dist"),                        # Railway absolute
-    Path("/app/frontend/dist"),                            # Railway if flattened
-    Path.cwd() / "src" / "frontend" / "dist",             # cwd-relative
+    _PROJECT_ROOT / "frontend" / "dist",
+    Path.cwd() / "src" / "frontend" / "dist",
+    Path("/app/src/frontend/dist"),
 ]
 _FRONTEND_DIST: Path | None = next((p for p in _CANDIDATES if p.is_dir()), None)
-
-import logging as _logging
-_log = _logging.getLogger(__name__)
-_log.info("Frontend dist search: %s", {str(p): p.exists() for p in _CANDIDATES})
-_log.info("CWD: %s, __file__: %s", Path.cwd(), Path(__file__).resolve())
 
 if _FRONTEND_DIST is not None and (_FRONTEND_DIST / "assets").is_dir():
     app.mount("/assets", StaticFiles(directory=_FRONTEND_DIST / "assets"), name="assets")
@@ -62,23 +55,3 @@ if _FRONTEND_DIST is not None and (_FRONTEND_DIST / "assets").is_dir():
         if file_path.is_file():
             return FileResponse(file_path)
         return FileResponse(_FRONTEND_DIST / "index.html")
-elif _FRONTEND_DIST is None:
-    @app.get("/", include_in_schema=False)
-    async def no_frontend() -> dict[str, object]:
-        import os
-        app_dir = Path("/app")
-        frontend_files: list[str] = []
-        if app_dir.is_dir():
-            for root, dirs, files in os.walk(str(app_dir / "src" / "frontend")):
-                depth = root.replace(str(app_dir), "").count(os.sep)
-                if depth > 3:
-                    continue
-                for f in files[:5]:
-                    frontend_files.append(os.path.join(root, f).replace(str(app_dir), ""))
-        return {
-            "error": "Frontend dist not found",
-            "cwd": str(Path.cwd()),
-            "file": str(Path(__file__).resolve()),
-            "app_exists": app_dir.is_dir(),
-            "frontend_files": frontend_files[:20],
-        }
