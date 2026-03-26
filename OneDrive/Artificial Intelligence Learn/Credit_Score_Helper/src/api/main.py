@@ -35,16 +35,28 @@ def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# Serve frontend static files
-_FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+# Serve frontend static files — try multiple possible locations
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_CANDIDATES = [
+    _PROJECT_ROOT / "frontend" / "dist",          # src/frontend/dist (relative to src/)
+    _PROJECT_ROOT.parent / "src" / "frontend" / "dist",  # fallback
+    Path("/app/src/frontend/dist"),                # Railway absolute path
+]
+_FRONTEND_DIST: Path | None = next((p for p in _CANDIDATES if p.is_dir()), None)
 
-if _FRONTEND_DIST.is_dir():
+if _FRONTEND_DIST is not None and (_FRONTEND_DIST / "assets").is_dir():
     app.mount("/assets", StaticFiles(directory=_FRONTEND_DIST / "assets"), name="assets")
 
     @app.get("/{full_path:path}", response_class=HTMLResponse, include_in_schema=False)
     async def serve_spa(request: Request, full_path: str) -> FileResponse:
         """Serve the React SPA for all non-API routes."""
+        assert _FRONTEND_DIST is not None
         file_path = _FRONTEND_DIST / full_path
         if file_path.is_file():
             return FileResponse(file_path)
         return FileResponse(_FRONTEND_DIST / "index.html")
+elif _FRONTEND_DIST is None:
+    @app.get("/", include_in_schema=False)
+    async def no_frontend() -> dict[str, str]:
+        candidates_str = ", ".join(str(p) for p in _CANDIDATES)
+        return {"error": "Frontend dist not found", "searched": candidates_str}
