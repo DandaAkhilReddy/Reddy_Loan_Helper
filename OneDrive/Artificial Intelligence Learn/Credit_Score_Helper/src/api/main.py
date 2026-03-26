@@ -38,11 +38,18 @@ def health_check() -> dict[str, str]:
 # Serve frontend static files — try multiple possible locations
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CANDIDATES = [
-    _PROJECT_ROOT / "frontend" / "dist",          # src/frontend/dist (relative to src/)
-    _PROJECT_ROOT.parent / "src" / "frontend" / "dist",  # fallback
-    Path("/app/src/frontend/dist"),                # Railway absolute path
+    _PROJECT_ROOT / "frontend" / "dist",                  # from src/api/ → src/frontend/dist
+    _PROJECT_ROOT.parent / "src" / "frontend" / "dist",   # from project root
+    Path("/app/src/frontend/dist"),                        # Railway absolute
+    Path("/app/frontend/dist"),                            # Railway if flattened
+    Path.cwd() / "src" / "frontend" / "dist",             # cwd-relative
 ]
 _FRONTEND_DIST: Path | None = next((p for p in _CANDIDATES if p.is_dir()), None)
+
+import logging as _logging
+_log = _logging.getLogger(__name__)
+_log.info("Frontend dist search: %s", {str(p): p.exists() for p in _CANDIDATES})
+_log.info("CWD: %s, __file__: %s", Path.cwd(), Path(__file__).resolve())
 
 if _FRONTEND_DIST is not None and (_FRONTEND_DIST / "assets").is_dir():
     app.mount("/assets", StaticFiles(directory=_FRONTEND_DIST / "assets"), name="assets")
