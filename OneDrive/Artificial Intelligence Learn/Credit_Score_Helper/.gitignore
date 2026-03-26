@@ -6,9 +6,11 @@ __pycache__/
 venv/
 
 # Build output
-/dist/
 build/
 coverage/
+
+# Keep frontend dist (needed for Railway deployment)
+!src/frontend/dist/
 
 # Environment
 .env
