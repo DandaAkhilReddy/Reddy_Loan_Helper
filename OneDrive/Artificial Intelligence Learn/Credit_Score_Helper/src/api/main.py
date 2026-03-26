@@ -64,6 +64,21 @@ if _FRONTEND_DIST is not None and (_FRONTEND_DIST / "assets").is_dir():
         return FileResponse(_FRONTEND_DIST / "index.html")
 elif _FRONTEND_DIST is None:
     @app.get("/", include_in_schema=False)
-    async def no_frontend() -> dict[str, str]:
-        candidates_str = ", ".join(str(p) for p in _CANDIDATES)
-        return {"error": "Frontend dist not found", "searched": candidates_str}
+    async def no_frontend() -> dict[str, object]:
+        import os
+        app_dir = Path("/app")
+        frontend_files: list[str] = []
+        if app_dir.is_dir():
+            for root, dirs, files in os.walk(str(app_dir / "src" / "frontend")):
+                depth = root.replace(str(app_dir), "").count(os.sep)
+                if depth > 3:
+                    continue
+                for f in files[:5]:
+                    frontend_files.append(os.path.join(root, f).replace(str(app_dir), ""))
+        return {
+            "error": "Frontend dist not found",
+            "cwd": str(Path.cwd()),
+            "file": str(Path(__file__).resolve()),
+            "app_exists": app_dir.is_dir(),
+            "frontend_files": frontend_files[:20],
+        }
